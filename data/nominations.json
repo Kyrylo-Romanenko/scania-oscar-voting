@@ -1,1 +1,13 @@
+[
+  { "id": "best_actor", "title": "Краща чоловіча роль", "type": "person" },
+  { "id": "best_actress", "title": "Краща жіноча роль", "type": "person" },
+  { "id": "best_supporting_actor", "title": "Краща чоловіча роль 2-го плану", "type": "person" },
+  { "id": "best_supporting_actress", "title": "Краща жіноча роль 2-го плану", "type": "person" },
+  { "id": "episode_star", "title": "Зірка епізоду", "type": "person" },
+
+  { "id": "best_vfx", "title": "Кращі спецефекти", "type": "film" },
+  { "id": "best_screenplay", "title": "Кращий сценарій", "type": "film" },
+  { "id": "best_film", "title": "Кращий фільм", "type": "film" },
+  { "id": "best_scania_ad", "title": "Краща реклама Scania", "type": "film" }
+]
 
