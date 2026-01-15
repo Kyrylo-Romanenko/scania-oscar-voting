@@ -1,1 +1,36 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scania Oscar | Results</title>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <div class="horizon"></div>
+
+  <div class="container">
+    <div class="header">
+      <div>
+        <div class="brand">Scania Oscar</div>
+        <h1 class="title">Результати</h1>
+        <p class="subtitle">Технічна сторінка для адмінів. Доступ через <code>?key=ADMIN_KEY</code>.</p>
+      </div>
+      <a class="btn secondary" href="index.html">На головну</a>
+    </div>
+
+    <div id="msg" class="msg">Завантаження…</div>
+
+    <div class="card" style="margin-top:14px;">
+      <div class="kpi" id="kpi" style="display:none"></div>
+      <div class="hr"></div>
+      <div id="resultsWrap"></div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/jsonp.js"></script>
+  <script src="js/results.js"></script>
+</body>
+</html>
 
