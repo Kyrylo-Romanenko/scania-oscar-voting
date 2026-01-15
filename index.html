@@ -1,304 +1,267 @@
 <!doctype html>
 <html lang="uk">
-
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Scania Oscar | Voting</title>
-    <style>
-        :root {
-            --gold: #FFC72C;
-            --bg: #000000;
-            --text: #ffffff;
-            --gray: #4a4a4a;
-             --muted: rgba(255, 255, 255, .55);
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scania Oscar | Home</title>
+  <style>
+    :root {
+      --gold: #FFC72C;
+      --bg: #000000;
+      --text: #ffffff;
+      --muted: rgba(255, 255, 255, .55);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body{
+      background-color:var(--bg);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;
+      height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      cursor:pointer;
+    }
+    .horizon{
+      position:absolute;
+      bottom:0; width:100%; height:2px;
+      background:var(--gold);
+      box-shadow:0 0 80px 10px rgba(255,199,44,.4);
+      opacity:.4;
+    }
+    .container{
+      display:grid;
+      grid-template-columns:1.1fr 1fr;
+      gap:96px;
+      max-width:1400px;
+      width:100%;
+      padding:48px;
+      z-index:10;
+      align-items:center;
+    }
+    @media(max-width:980px){
+      .container{grid-template-columns:1fr; gap:28px; padding:24px;}
+      .qr-wrapper{margin:0 auto;}
+    }
+    .brand-mark{
+      font-weight:900;
+      letter-spacing:0.3em;
+      font-size:14px;
+      color:var(--gold);
+      margin-bottom:24px;
+      display:block;
+      text-transform:uppercase;
+    }
+    h1{
+      font-size:clamp(44px, 5vw, 86px);
+      font-weight:750;
+      line-height:.92;
+      margin-bottom:22px;
+      letter-spacing:-0.03em;
+    }
+    .description{
+      font-size:clamp(16px, 1.6vw, 22px);
+      color:var(--muted);
+      max-width:520px;
+      line-height:1.45;
+    }
+    .qr-wrapper{
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:600px;
+      height:600px;
+    }
+    #analyzer-canvas{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      z-index:1;
+    }
+    .qr-frame{
+      position:relative;
+      background:white;
+      padding:35px;
+      border-radius:40px;
+      z-index:5;
+      box-shadow:0 0 60px rgba(0,0,0,.5);
+    }
+    #qr-canvas{
+      display:block;
+      width:280px;
+      height:280px;
+    }
+    .corner{
+      position:absolute;
+      width:40px;
+      height:40px;
+      border:3px solid var(--gold);
+      z-index:10;
+    }
+    .tl{ top:-10px; left:-10px; border-right:0; border-bottom:0; }
+    .tr{ top:-10px; right:-10px; border-left:0; border-bottom:0; }
+    .bl{ bottom:-10px; left:-10px; border-right:0; border-top:0; }
+    .br{ bottom:-10px; right:-10px; border-left:0; border-top:0; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    .click-prompt{
+      position:fixed;
+      top:20px;
+      right:20px;
+      font-size:12px;
+      color:var(--gold);
+      opacity:.6;
+      text-transform:uppercase;
+      letter-spacing:1px;
+    }
 
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            cursor: pointer;
-            /* Підказка, що треба клікнути */
-        }
-
-        .horizon {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--gold);
-            box-shadow: 0 0 80px 10px rgba(255, 199, 44, 0.4);
-            opacity: 0.4;
-        }
-
-        .container {
-            display: grid;
-            grid-template-columns: 1.1fr 1fr;
-            gap: 96px;
-            max-width: 1400px;
-            width: 100%;
-            padding: 48px;
-            z-index: 10;
-            align-items: center;
-        }
-
-        .content {
-            flex: 1;
-        }
-
-        .brand-mark {
-            font-weight: 900;
-            letter-spacing: 0.3em;
-            font-size: 14px;
-            color: var(--gold);
-            margin-bottom: 24px;
-            display: block;
-        }
-
-        h1 {
-            font-size: clamp(44px, 5vw, 86px);
-            font-weight: 750;
-            line-height: .92;
-            margin-bottom: 22px;
-            letter-spacing: -0.03em;
-        }
-
-        .description {
-            font-size: clamp(16px, 1.6vw, 22px);
-            color: var(--muted);
-            max-width: 520px;
-            line-height: 1.45;
-        }
-
-        /* Секція QR та Аквалайзера */
-        .qr-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 600px;
-            height: 600px;
-        }
-
-        #analyzer-canvas {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        .qr-frame {
-            position: relative;
-            background: white;
-            padding: 35px;
-            border-radius: 40px;
-            z-index: 5;
-            box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
-        }
-
-        #qr-canvas {
-            display: block;
-            width: 280px;
-            height: 280px;
-        }
-
-        .corner {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--gold);
-            z-index: 10;
-        }
-
-        .tl {
-            top: -10px;
-            left: -10px;
-            border-right: 0;
-            border-bottom: 0;
-        }
-
-        .tr {
-            top: -10px;
-            right: -10px;
-            border-left: 0;
-            border-bottom: 0;
-        }
-
-        .bl {
-            bottom: -10px;
-            left: -10px;
-            border-right: 0;
-            border-top: 0;
-        }
-
-        .br {
-            bottom: -10px;
-            right: -10px;
-            border-left: 0;
-            border-top: 0;
-        }
-
-        .click-prompt {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            font-size: 12px;
-            color: var(--gold);
-            opacity: 0.6;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-    </style>
+    .link-hint{
+      margin-top:14px;
+      font-size:12px;
+      color:rgba(255,255,255,.45);
+      max-width:560px;
+      line-height:1.45;
+    }
+    .link-hint code{
+      color:rgba(255,255,255,.75);
+      background:rgba(255,255,255,.08);
+      padding:2px 6px;
+      border-radius:8px;
+    }
+  </style>
 </head>
-
 <body>
+  <div class="horizon"></div>
+  <div class="click-prompt" id="prompt">Клікніть для активації звуку</div>
 
-    <div class="horizon"></div>
-    <div class="click-prompt" id="prompt">Клікніть для активації звуку</div>
-
-    <div class="container">
-        <div class="content">
-            <!-- <span class="brand-mark">SCANIA EVENTS</span> -->
-            <h1>SCANIA<br><span style="color: var(--gold)">OSCAR</span></h1>
-            <p class="description">
-                Час обирати кращих. Відскануйте код та візьміть участь у голосуванні Scania Oscar 2026.
-            </p>
-        </div>
-
-        <div class="qr-wrapper">
-            <canvas id="analyzer-canvas"></canvas>
-            <div class="qr-frame">
-                <div class="corner tl"></div>
-                <div class="corner tr"></div>
-                <div class="corner bl"></div>
-                <div class="corner br"></div>
-                <canvas id="qr-canvas"></canvas>
-            </div>
-        </div>
+  <div class="container">
+    <div class="content">
+      <span class="brand-mark">SCANIA EVENTS</span>
+      <h1>SCANIA<br><span style="color: var(--gold)">OSCAR</span></h1>
+      <p class="description">
+        Час обирати кращих. Відскануйте QR та перейдіть до голосування Scania Oscar.
+      </p>
+      <p class="link-hint">
+        Якщо ви отримали персональний лінк <code>vote.html?t=TOKEN</code>, відкрийте саме його (або вставте токен на сторінці голосування).
+      </p>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
-    <script>
-        (function () {
-            // 1. Генерація QR
-            new QRious({
-                element: document.getElementById('qr-canvas'),
-                value: 'https://docs.google.com/forms/d/e/1FAIpQLSdEDKjw2pMoKuAY7IK9s_o5VmnVdIo0RKzKzzigrLUE-QmyPQ/viewform?usp=header',
-                size: 800,
-                background: '#ffffff',
-                foreground: '#000000',
-                level: 'H'
-            });
+    <div class="qr-wrapper">
+      <canvas id="analyzer-canvas"></canvas>
+      <div class="qr-frame">
+        <div class="corner tl"></div><div class="corner tr"></div>
+        <div class="corner bl"></div><div class="corner br"></div>
+        <canvas id="qr-canvas"></canvas>
+      </div>
+    </div>
+  </div>
 
-            // 2. Аквалайзер
-            const canvas = document.getElementById('analyzer-canvas');
-            const ctx = canvas.getContext('2d');
+  <!-- QR generator (як у вашому референсі) -->
+  <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+  <script>
+    (function () {
+      // 1) QR -> vote.html на вашому GitHub Pages
+      function siteBase(){
+        // прибрати index.html, якщо він у URL
+        return location.href.replace(/index\.html.*$/, "");
+      }
+      const voteUrl = siteBase() + "vote.html";
 
-            // Налаштування розміру канвасу під ретину
-            function resizer() {
-                canvas.width = canvas.offsetWidth * window.devicePixelRatio;
-                canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-            }
-            window.addEventListener('resize', resizer);
-            resizer();
+      new QRious({
+        element: document.getElementById('qr-canvas'),
+        value: voteUrl,
+        size: 800,
+        background: '#ffffff',
+        foreground: '#000000',
+        level: 'H'
+      });
 
-            let audioCtx, analyser, dataArray, source;
-            let initialized = false;
+      // 2) Аквалайзер (опціонально, з мікрофоном)
+      const canvas = document.getElementById('analyzer-canvas');
+      const ctx = canvas.getContext('2d');
 
-            async function initAudio() {
-                if (initialized) return;
+      function resizer() {
+        canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+        canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+      }
+      window.addEventListener('resize', resizer);
+      resizer();
 
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                    analyser = audioCtx.createAnalyser();
-                    source = audioCtx.createMediaStreamSource(stream);
+      let audioCtx, analyser, dataArray, source;
+      let initialized = false;
 
-                    analyser.fftSize = 256;
-                    const bufferLength = analyser.frequencyBinCount;
-                    dataArray = new Uint8Array(bufferLength);
+      async function initAudio() {
+        if (initialized) return;
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          analyser = audioCtx.createAnalyser();
+          source = audioCtx.createMediaStreamSource(stream);
 
-                    source.connect(analyser);
-                    initialized = true;
-                    document.getElementById('prompt').style.display = 'none';
-                    render();
-                } catch (err) {
-                    console.error("Мікрофон недоступний:", err);
-                    alert("Будь ласка, дозвольте доступ до мікрофона для візуалізації.");
-                }
-            }
+          analyser.fftSize = 256;
+          const bufferLength = analyser.frequencyBinCount;
+          dataArray = new Uint8Array(bufferLength);
 
-            let rotation = 0;
+          source.connect(analyser);
+          initialized = true;
+          document.getElementById('prompt').style.display = 'none';
+          render();
+        } catch (err) {
+          console.warn("Мікрофон недоступний:", err);
+          document.getElementById('prompt').textContent = "QR активний (мікрофон не дозволено)";
+        }
+      }
 
-            function render() {
-                requestAnimationFrame(render);
-                analyser.getByteFrequencyData(dataArray);
+      let rotation = 0;
+      function render() {
+        requestAnimationFrame(render);
+        analyser.getByteFrequencyData(dataArray);
 
-                const w = canvas.width;
-                const h = canvas.height;
-                const cx = w / 2;
-                const cy = h / 2;
+        const w = canvas.width, h = canvas.height;
+        const cx = w / 2, cy = h / 2;
+        ctx.clearRect(0, 0, w, h);
 
-                ctx.clearRect(0, 0, w, h);
+        rotation += 0.003;
+        const bars = 180;
+        const innerRadius = 180 * window.devicePixelRatio;
 
-                rotation += 0.003; // Повільне обертання
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rotation);
 
-                const bars = 180;
-                const innerRadius = 180 * window.devicePixelRatio; // Початок від краю QR
+        for (let i = 0; i < bars; i++) {
+          const freqIndex = Math.floor((i / bars) * dataArray.length);
+          const rawValue = dataArray[freqIndex];
+          const strength = rawValue / 255;
 
-                ctx.save();
-                ctx.translate(cx, cy);
-                ctx.rotate(rotation);
+          const barLen = strength * 190 * window.devicePixelRatio;
+          const angle = (i / bars) * Math.PI * 2;
 
-                for (let i = 0; i < bars; i++) {
-                    const freqIndex = Math.floor((i / bars) * dataArray.length);
-                    const rawValue = dataArray[freqIndex];
-                    const strength = rawValue / 255;
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(255, 199, 44, ${0.2 + strength * 0.8})`;
+          ctx.lineWidth = 4 * window.devicePixelRatio;
+          ctx.lineCap = 'round';
 
-                    const barLen = strength * 190 * window.devicePixelRatio; // Довжина променя
-                    const angle = (i / bars) * Math.PI * 2;
+          const xStart = Math.cos(angle) * innerRadius;
+          const yStart = Math.sin(angle) * innerRadius;
+          const xEnd = Math.cos(angle) * (innerRadius + barLen);
+          const yEnd = Math.sin(angle) * (innerRadius + barLen);
 
-                    // Малюємо промені
-                    ctx.beginPath();
-                    ctx.strokeStyle = `rgba(255, 199, 44, ${0.2 + strength * 0.8})`;
-                    ctx.lineWidth = 4 * window.devicePixelRatio;
-                    ctx.lineCap = 'round';
+          ctx.moveTo(xStart, yStart);
+          ctx.lineTo(xEnd, yEnd);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
 
-                    const xStart = Math.cos(angle) * innerRadius;
-                    const yStart = Math.sin(angle) * innerRadius;
-                    const xEnd = Math.cos(angle) * (innerRadius + barLen);
-                    const yEnd = Math.sin(angle) * (innerRadius + barLen);
+      document.body.addEventListener('click', () => {
+        initAudio();
+        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      });
 
-                    ctx.moveTo(xStart, yStart);
-                    ctx.lineTo(xEnd, yEnd);
-                    ctx.stroke();
-                }
-                ctx.restore();
-            }
-
-            // Активація по кліку
-            document.body.addEventListener('click', () => {
-                initAudio();
-                if (audioCtx && audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-            });
-
-        })();
-    </script>
+    })();
+  </script>
 </body>
-
 </html>
